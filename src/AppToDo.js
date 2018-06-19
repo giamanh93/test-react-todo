@@ -136,10 +136,10 @@ export default class AppToDo extends Component {
 											<table className="table table-bordered">
 												<thead>
 												<tr>
-													<th>ID</th>
-													<th>Name</th>
-													<th>Status</th>
-													<th>Action</th>
+													<th style={{width: '30%'}}>ID</th>
+													<th style={{width: '40%'}}>Name</th>
+													<th style={{width: '15%'}} className="text-center">Status</th>
+													<th style={{width: '15%'}} className="text-center">Action</th>
 												</tr>
 												</thead>
 												<tbody>
@@ -149,8 +149,11 @@ export default class AppToDo extends Component {
 															<tr key={index}>
 																<td>{info.id}</td>
 																<td>{info.name}</td>
-																<td>{info.status? 'true': 'false'}</td>
-																<td>
+																<td className="text-center">
+																	<i style={{display: info.status? 'block': 'none'}} className="fa fa-check-square"></i>
+																	<i style={{display: !info.status? 'block': 'none'}} className="far fa-square"></i>
+																</td>
+																<td className="text-center">
 																	<a href="javascript: void(0);" onClick={() => this.setEdit(info)} type="button" className="btn btn-link">Edit</a> |
 																	<a href="javascript:void(0);" onClick={() => this.remove(info, index)} type="button" className="btn btn-link">Delete</a>
 																</td>
@@ -163,7 +166,7 @@ export default class AppToDo extends Component {
 										</div>
 										<div className="panel-footer text-center">
 											<button type="submit" className="btn btn-primary" onClick={() => this.setEdit(null)}>
-												<i className="fa fa-plus mr-5"></i>Thêm Công Việc
+												<i className="fa fa-plus"></i>Thêm Công Việc
 											</button>
 										</div>
 									</div>
