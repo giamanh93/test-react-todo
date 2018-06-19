@@ -1,139 +1,102 @@
 import React, {Component} from 'react';
-import TaskForm from './Components/TaskForm.js';
-import Control from './Components/Control.js';
-import TaskList from './Components/TaskList.js';
+// import TaskForm from './Components/TaskForm.js';
+// import Control from './Components/Control.js';
+// import TaskList from './Components/TaskList.js';
 import uuid from 'uuid';
 
 
-class AppToDo extends Component {
+export default class AppToDo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tasks : [],
-            isDisplayForm : false,
-            taskEditing : null
+            list : [],
+            isEdit : false,
+            current : null
         }
     }
 
-    componentWillMount() {
-        if(localStorage && localStorage.getItem('tasks')) {
-            let tasks = JSON.parse(localStorage.getItem('tasks'));
-            this.setState({ tasks: tasks })
-        }
-    }
-
-    onToggleForm() {
-        if(this.state.isDisplayForm && this.state.taskEditing !== null) {
-            this.setState({
-                isDisplayForm : true,
-                taskEditing : null
-            })
-        }else {
-            this.setState({
-                isDisplayForm : !this.state.isDisplayForm,
-                taskEditing : null
-            })
-        }
+    addItem(info) {
 
     }
 
-    onCloseForm() {
-       this.setState({
-           isDisplayForm : false
-       })
+    formSubmit(e) {
+console.log('hgjgjgjh');
     }
 
-    onSubmit(data) {
-        let {tasks} = this.state;
-        if(data.id === ''){
-            data.id = uuid.v4();
-            tasks.push(data);
-        }else {
-            let index = tasks.findIndex(x => x.id === data.id);
-            tasks[index] = data;
-        }
-        this.setState({
-            tasks: tasks,
-            taskEditing : null
-        });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-    onUpdateStatus(id) {
-        let {tasks} = this.state;
-       let index = this.findIndex(id);
-       // console.log(index);
-       if(index !== -1) {
-           tasks[index].status = !tasks[index].status;
-       }
-       this.setState({
-           tasks : tasks
-       });
-       localStorage.setItem('tasks' , JSON.stringify(tasks));
-    }
-    findIndex(id) {
-        let {tasks} = this.state;
-        let result = -1;
-        tasks.forEach((task, index) => {
-            if(task.id === id) {
-                result =  index;
-            }
-        });
-        return result;
-    }
-    onDelete(id) {
-        let {tasks} = this.state;
-        let index = tasks.findIndex(x => x.id === id);
-        tasks.splice(index , 1);
-        this.setState({
-            tasks : tasks
-        });
-        this.onCloseForm();
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-
-    }
-    onUpdate(id){
-        let {tasks} = this.state;
-        let index = tasks.findIndex(x => x.id === id);
-        let taskEditing = tasks[index];
-        this.setState({
-            taskEditing : taskEditing
-        });
-        this.onShowForm();
-    }
-    onShowForm =() => {
-        this.setState({
-            isDisplayForm : true
-        })
-    };
     render() {
-        let {tasks, isDisplayForm, taskEditing} = this.state;
-        let elmDisplayForm = isDisplayForm ? <TaskForm taskEditing={taskEditing} onCloseForm = {this.onCloseForm.bind(this)} onSubmit = {this.onSubmit.bind(this)}/> : '';
+        const state = this.state;
+        const isEdit = state.isEdit;
+
         return (
             <div className="container">
-                <div className="text-center">
-                    <h1>Quản Lý Công Việc</h1>
-                    <hr/>
-                </div>
                 <div className="row">
-                    <div className={ isDisplayForm ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : ''}>
-                        {elmDisplayForm}
+                    <div className={ isEdit ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : ''}>
+                        <div className="panel-group">
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    Thêm/Sửa công việc
+                                </div>
+                                <div className="panel-body">
+                                    <form action="" onSubmit={this.formSubmit.bind(this)}>
+                                        <div className="form-group">
+                                            <label htmlFor="id">ID:</label>
+                                            <input type="email" className="form-control" id="id"/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="Name">Name:</label>
+                                            <input type="text" className="form-control" id="Name"  />
+                                        </div>
+                                        <div className="checkbox">
+                                            <label><input type="checkbox" id="status" /> Status</label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div className="panel-footer">
+                                <button type="submit" className="btn btn-default"> Lưu </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className={isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
-                        <button type="button" className="btn btn-primary" onClick={this.onToggleForm.bind(this)}>
-                            <span className="fa fa-plus mr-5"></span>Thêm Công Việc
-                        </button>
-                            <Control />
+                    <div className={isEdit ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
                         <div className="row mt-15">
                             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                               <TaskList onUpdate={this.onUpdate.bind(this)} onDelete = {this.onDelete.bind(this)} onUpdateStatus = {this.onUpdateStatus.bind(this)} tasks={tasks}/>
+                                <div className="panel-group">
+                                    <div className="panel panel-default">
+                                        <div class="panel-heading">
+                                            Quản Lý Công Việc
+                                        </div>
+                                        <div className="panel-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>ID</td>
+                                                        <td>Name</td>
+                                                        <td>Status</td>
+                                                        <td>Action</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="panel-footer">
+                                        <button type="button" className="btn btn-primary" onClick={this.addItem(null)}>
+                                            <i className="fa fa-plus mr-5"></i>Thêm Công Việc
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         );
     }
 }
-
-export default AppToDo;
